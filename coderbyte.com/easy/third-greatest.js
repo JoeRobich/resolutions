@@ -12,8 +12,6 @@ all 5 letters long, so return the last one. The array will have at least three
 strings and each string will only contain letters.
 */
 
-// HELPERS //
-
 // ANSWER //
 
 function ThirdGreatest(strArr) {

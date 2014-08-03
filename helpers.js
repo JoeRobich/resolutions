@@ -144,7 +144,7 @@ Array.prototype.last = function() {
 /**
 * Returns the last n items. n defaults to length - 1.
 */
-Array.prototype.rest=function(n) {
+Array.prototype.rest = function(n) {
   n = n || this.length - 1;
   return this.slice(this.length - n);
 };
@@ -157,13 +157,34 @@ Array.prototype.clone = function() {
 };
 
 /**
+* Returns an array of only the unique items.
+*/
+Array.prototype.unique = function() {
+  var _this = this;
+  return _this.reduce(function(unique, item) {
+    if (!_this.contains(item))
+      unique.push(item);
+    return unique;
+  }, []);
+};
+
+/**
 * Returns an array without the items in the specified array.
 */
 Array.prototype.without = function(values) {
   var _this = this;
   return _this.filter(function(item) {
     return !values.contains(item);
-  };
+  });
+};
+
+/**
+* Returns an array of the items present in both arrays.
+*/
+Array.prototype.intersect = function(values) {
+  return this.filter(function(item) {
+    return values.contains(item)
+  });
 };
 
 /**

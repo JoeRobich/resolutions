@@ -8,8 +8,6 @@ example if the input is 16 then your program should return the string true
 but if the input is 22 then the output should be the string false.
 */
 
-// HELPERS //
-
 // ANSWER //
 
 function PowersofTwo(num) {
