@@ -222,6 +222,16 @@ Object.prototype.vals = function() {
 };
 
 /**
+* Returns an array of the key-value pairs in this object.
+*/
+Object.prototype.kvps = function() {
+  var _this = this;
+  return _this.keys().map(function(key) {
+    return { key : key, value : _this[key] };
+  });
+};
+
+/**
 * Returns an array of the characters in this string.
 */
 String.prototype.toArray = function() {
@@ -261,3 +271,11 @@ function lambda(func) {
   var body = func.substr(index + 2);
   return Function(params, "return " + body);
 };
+
+/**
+* For use in sorting arrays of numbers.
+*/
+function numericSort(a, b)
+{
+  return a - b;
+}
