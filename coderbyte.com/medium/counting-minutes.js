@@ -27,7 +27,7 @@ function minutesFromMidnight(time) {
   return (hours * 60) + minutes;
 }
 
-function CountingMinutesI(str) {
+function CountingMinutes(str) {
   var times = str.split('-');
   var start = minutesFromMidnight(times[0]);
   var end = minutesFromMidnight(times[1]);
@@ -38,4 +38,4 @@ function CountingMinutesI(str) {
   return end - start;
 }
 
-CountingMinutesI(readline());
+CountingMinutes(readline());
