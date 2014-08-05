@@ -253,6 +253,16 @@ String.prototype.isPalindrome = function() {
 };
 
 /**
+* Returns a string where {n} is replaced by the argument at index n.
+*/
+String.format = function(template) {
+  var values = Array.prototype.slice.call(arguments, 1);
+  for (var index = 0; index < values.length; i++)
+    template = template.replace(new RegExp("\\{" + i + "\\}", "g"), a[i]);
+  return templates;
+};
+
+/**
 * Returns true if this number is prime.
 */
 Number.prototype.isPrime = function() {
