@@ -15,7 +15,7 @@ numbers from 1 to 20?
 Array.range=function(s,e){var a=[];while(s<e)a.push(s++);return a}
 Array.prototype.any=function(f){for(var i=0;i<this.length;)if(f(this[i++]))return !0;return !1}
 Array.prototype.last=function(){return this[this.length-1]}
-var numericSort = function(a,b){return a-b}
+function numericSort(a,b){return a-b}
 
 // ANSWER //
 
