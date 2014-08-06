@@ -9,6 +9,38 @@ Function.prototype.not = function() {
 };
 
 /**
+* Wraps a function in an argument collector that invokes the original
+* when enough arguments have been supplied.
+*/
+Function.prototype.curry = function() {
+  var _this = this;
+  function innerCurry(curriedArgs) {
+    return function() {
+      var args = curriedArgs.concat(Array.prototype.slice.call(arguments));
+      if (args.length< _this.length)
+        return innerCurry(args)
+      else
+        return _this.apply(this, args);
+    };
+  };
+  return innerCurry([].slice.call(arguments));
+}
+
+/**
+* Wraps a function to repeatedly invoke the function's result until a
+* non-function is returned.
+*/
+Function.prototype.trampoline = function() {
+  var _this = this;
+  return function() {
+    var result = _this.apply(this, arguments);
+    while (typeof r === 'function')
+      result = result();
+    return result;
+  };
+};
+
+/**
 * Creates an array of numbers from start to end - 1.
 */
 Array.range = function(start, end) {
@@ -73,7 +105,7 @@ Array.prototype.find = function(predicate) {
 */
 Array.prototype.any = function(predicate) {
   for (var index = 0; index < this.length; index++)
-    if (predicate(this[i]))
+    if (predicate(this[index]))
       return true;
   return false;
 };
