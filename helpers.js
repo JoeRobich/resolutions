@@ -41,7 +41,7 @@ Function.prototype.trampoline = function() {
 };
 
 /**
-* Creates an array of numbers from start to end - 1.
+* Returns an array of numbers from start to end - 1.
 */
 Array.range = function(start, end) {
     var numbers = [];
@@ -49,6 +49,19 @@ Array.range = function(start, end) {
       numbers.push(number);
     return numbers;
 };
+
+/**
+* Returns a new array of the same length populated with the specified value.
+*/
+Array.prototype.fill = function(value) {
+  var a = [];
+  var i = 0;
+  while (i < this.length) {
+    a.push(v);
+    i++;
+  }
+  return a;
+}
 
 /**
 * Creates an array containing all the combinations of items.
@@ -65,7 +78,7 @@ Array.prototype.combos = function() {
 };
 
 /**
-* Creates a new array without any falsey values.
+* Returns a new array without any falsey values.
 */
 Array.prototype.compact = function() {
   return this.filter(function(item) {

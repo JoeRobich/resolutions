@@ -1,3 +1,5 @@
+// http://repl.it/WZi/3
+
 // PROBLEM //
 
 /*
@@ -66,3 +68,5 @@ var findGreatestProduct = function(numbers, digits) {
 };
 
 findGreatestProduct(input, 13);
+
+// 23514624000
