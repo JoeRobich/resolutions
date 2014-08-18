@@ -1,3 +1,5 @@
+// http://repl.it/XCK
+
 // PROBLEM //
 
 /*
@@ -22,15 +24,14 @@ What is the value of the first triangle number to have over five hundred divisor
 
 // HELPERS //
 
-Array.range=function(s,e){var a=[];while(s<e)a.push(s++);return a};
-Number.prototype.factors=function(){var t=this|0;return Array.range(1,t/2).filter(function(n){return !(t%n)}).concat(t)};
+Number.prototype.factors=function(){var a=[],t=this,l=1,h=t;while(l<=h){if(!(t%l)){h=t/l;a.push(l);if(h!=l)a.push(h)}l++}return a};
 
 // ANSWER //
 
 function findTriangleNumberWithNFactors(n) {
   var triangleNumber = 0;
 
-  for (var i = 1; i < 5000; i++) {
+  for (var i = 1; i < Number.MAX_VALUE; i++) {
     triangleNumber += i;
 
     if (triangleNumber.factors().length >= n)
@@ -39,3 +40,5 @@ function findTriangleNumberWithNFactors(n) {
 }
 
 findTriangleNumberWithNFactors(500);
+
+// 76576500

@@ -358,6 +358,29 @@ Number.prototype.isPrime = function() {
 };
 
 /**
+* Returns an array of all the factors of this number.
+*/
+Number.prototype.factors = function() {
+  var array = [];
+  var low = 1;
+  var high = this;
+
+  while (low <= high) {
+    if (!(this % low)) {
+      high = this / low;
+      array.push(low);
+
+      if(high != low)
+        array.push(high);
+    }
+
+    low++;
+  }
+
+  return array;
+};
+
+/**
 * Returns a function equivalent of the specified lambda.
 */
 function lambda(func) {
