@@ -54,13 +54,12 @@ Array.range = function(start, end) {
 * Returns a new array of the same length populated with the specified value.
 */
 Array.prototype.fill = function(value) {
-  var a = [];
-  var i = 0;
-  while (i < this.length) {
-    a.push(v);
-    i++;
-  }
-  return a;
+  var array = [];
+
+  for (var index = 0; index < this.length; index++)
+    array.push(value);
+
+  return array;
 }
 
 /**
@@ -162,6 +161,47 @@ Array.prototype.pluck = function(name) {
   return this.select(function(item) {
     return item[name];
   });
+};
+
+/**
+* Returns an array of arrays of the items at each corresponding position.
+*/
+Array.prototype.zip = function() {
+  var array = [];
+  var length = this.pluck('length').max();
+
+  for (var index = 0; index < length; index++)
+    array.push(this.pluck(index));
+
+  return array;
+}
+
+/**
+* Returns an array of arrays of items of the specified size.
+*/
+Array.prototype.chunk = function(size) {
+  var array = [];
+  var index = 0;
+
+  while (index < this.length) {
+    array.push(this.slice(index, index + size));
+    index += size;
+  }
+
+  return array;
+};
+
+/**
+* Returns a new array containing all the elements of all arrays contained within this array.
+*/
+Array.prototype.flatten = function() {
+  return this.reduce(function(array, item) {
+    if(Array.isArray(item))
+      return array.concat(item.flatten());
+
+    array.push(item);
+    return array;
+  },[]);
 };
 
 /**
