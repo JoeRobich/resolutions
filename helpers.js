@@ -51,6 +51,18 @@ Array.range = function(start, end) {
 };
 
 /**
+* Returns a new array of the specified length populated with the specified value.
+*/
+Array.fill = function(size, value) {
+  var array = [];
+
+  for (var index = 0; index < size; index++)
+    array.push(value);
+
+  return array;
+};
+
+/**
 * Returns a new array of the same length populated with the specified value.
 */
 Array.prototype.fill = function(value) {
@@ -95,9 +107,20 @@ Array.prototype.contains = function(item) {
 /**
 * Returns the sum of all the items.
 */
-Array.prototype.sum = function() {
+Array.prototype.sum = function(func) {
+  func = func || function(i) { return i; };
   return this.reduce(function(sum, number) {
-    return sum + number;
+    return sum + func(number);
+  });
+};
+
+/**
+* Returns the product of all the items.
+*/
+Array.prototype.product = function(func) {
+  func = func || function(i) { return i; };
+  return this.reduce(function(product, number) {
+    return product * func(number);
   });
 };
 
@@ -135,9 +158,10 @@ Array.prototype.all = function(predicate) {
 /**
 * Returns the item with the largest value.
 */
-Array.prototype.max = function() {
+Array.prototype.max = function(func) {
+  func = func || function(i) { return i; };
   return this.reduce(function(max, number) {
-    if (number > max)
+    if (func(number) > func(max))
       return number;
     return max;
   });
@@ -146,9 +170,10 @@ Array.prototype.max = function() {
 /**
 * Returns the item with the smallest value.
 */
-Array.prototype.min = function() {
+Array.prototype.min = function(func) {
+  func = func || function(i) { return i; };
   return this.reduce(function(min, number) {
-    if (number < min)
+    if (func(number) < func(min))
       return number;
     return min;
   });
@@ -355,6 +380,20 @@ Number.prototype.isPrime = function() {
     if (!(this % number))
       return false;
   return true;
+};
+
+/**
+* Returns true if this number is odd.
+*/
+Number.prototype.isOdd = function() {
+  return this % 2;
+};
+
+/**
+* Returns true if this number is even.
+*/
+Number.prototype.isEven = function() {
+  return !(this % 2);
 };
 
 /**
