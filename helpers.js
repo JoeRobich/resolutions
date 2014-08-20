@@ -420,6 +420,19 @@ Number.prototype.factors = function() {
 };
 
 /**
+* Returns the factorial of this number.
+*/
+Number.prototype.factorial = function() {
+  var product = 1;
+
+  for (var number = 2; number <= this; number++)
+    product  *= number;
+
+  return product;
+};
+
+
+/**
 * Returns a function equivalent of the specified lambda.
 */
 function lambda(func) {
