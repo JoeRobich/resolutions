@@ -298,6 +298,15 @@ Array.prototype.intersect = function(values) {
 };
 
 /**
+* Returns an array of the items that match the specified object.
+*/
+Array.prototype.matches = function(match) {
+  return this.filter(function(item) {
+    return item.isMatch(match);
+  });
+};
+
+/**
 * Returns an object where the keys are the values returned when applying the
 * specified function to the items in the array and the values are the number of
 * occurance of that key.
@@ -339,6 +348,23 @@ Object.prototype.kvps = function() {
   return _this.keys().map(function(key) {
     return { key : key, value : _this[key] };
   });
+};
+
+/**
+* Returns true if this object's properties match the specified object.
+*/
+Object.prototype.isMatch = function(match) {
+    for (var key in match) {
+      if (match.hasOwnProperty(k)) {
+        if (match[k] instanceof Object) {
+          if (!this[k].isMatch(match[k]))
+            return false;
+        } else if (this[k] !== match[k])
+          return false;
+      }
+    }
+
+    return true;
 };
 
 /**
