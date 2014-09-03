@@ -1,8 +1,6 @@
 #! node --harmony
 "use strict";
 
-//
-
 // PROBLEM //
 
 /*
@@ -32,16 +30,10 @@ Number.prototype.divisors=function(){var a=this.factors();a.sort(function(a, b){
 
 Array.fill=function(s,v){var a=[],i=0;while(i++<s)a.push(v);return a}
 Array.prototype.sum=function(f){f=f||function(i){return i};return this.reduce(function(s,n){return s+f(n)})}
-Array.prototype.compact=function(){return this.filter(function(i){return i})}
 
 function* range(low, high) {
   for (let n = low; n < high; n++)
     yield n;
-}
-
-function* seq(array) {
-  for (let i = 0; i < array.length; i++)
-    yield array[i];
 }
 
 // ANSWER //
@@ -69,11 +61,11 @@ for (let b = 0; b < abundantNumbers.length; b++)
 }
 
 let result = notSumOfAbundants.reduce(function(s, f, n) {
-  if (n < limit && f)
+  if (f)
     s += n;
   return s;
 }, 0)
 
 console.log(result);
 
-//
+// 4179871
