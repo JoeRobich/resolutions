@@ -1,3 +1,5 @@
+#! node
+
 // http://repl.it/X23
 
 // PROBLEM //
@@ -71,6 +73,7 @@ function factorial(n) {
   return fac;
 }
 
-factorial(100).split('').map(Number).sum();
+var result = factorial(100).split('').map(Number).sum();
 
+console.log(result);
 // 648

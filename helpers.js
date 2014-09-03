@@ -430,7 +430,7 @@ Number.prototype.factors = function() {
   var low = 1;
   var high = this;
 
-  while (low <= high) {
+  while (low < high) {
     if (!(this % low)) {
       high = this / low;
       array.push(low);
