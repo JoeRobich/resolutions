@@ -1,3 +1,5 @@
+#! node
+
 // http://repl.it/Ydx
 
 // PROBLEM //
