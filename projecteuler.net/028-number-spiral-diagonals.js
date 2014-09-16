@@ -1,5 +1,6 @@
 #! node
-"use strict";
+
+// http://repl.it/Yzn
 
 // PROBLEM //
 

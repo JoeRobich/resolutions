@@ -1,6 +1,6 @@
 #! node
 
-//
+// http://repl.it/ZEW
 
 // PROBLEM //
 
@@ -21,13 +21,34 @@ include it once in your sum.
 
 // HELPERS //
 
-
+Array.prototype.sum=function(f){f=f||function(i){return i};return this.reduce(function(s,n){return s+f(n)})}
 
 // ANSWER //
 
+function findPandigitalProductSum(key) {
+  var pandigitalProducts = {};
 
-var result = true;
+  for (var a = 0; a < 9999; a++)
+  for (var b = 0; b < 9999 - a; b++) {
+    var c = a * b;
+
+    var digits = a.toString() + b.toString() + c.toString();
+    if (digits.length != key.length)
+      continue;
+
+    digits = digits.split('').sort().join('');
+
+    if (digits != key)
+      continue;
+
+    pandigitalProducts[c] = 1;
+  }
+
+  return Object.keys(pandigitalProducts).map(Number).sum();
+}
+
+var result = findPandigitalProductSum("123456789");
 
 console.log(result);
 
-//
+// 45228
