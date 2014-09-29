@@ -1,6 +1,6 @@
 #! node
 
-//
+// http://repl.it/0GW
 
 // PROBLEM //
 
@@ -18,32 +18,38 @@ following expression.
 d.1 × d.10 × d.100 × d.1000 × d.10000 × d.100000 × d.1000000
 */
 
-// HELPERS //
-
-Array.range=function(s,e){var a=[];while(s<e)a.push(s++);return a}
-String.prototype.reverse=function(){return this.split('').reverse().join('')}
-String.prototype.isPalindrome=function(){return this==this.reverse()}
-Array.prototype.sum=function(f){f=f||function(i){return i};return this.reduce(function(s,n){return s+f(n)})}
-
 // ANSWER //
 
-function findFractionalDigit(n) {
-  if (n < 10)
-    return n;
+function computeChampernownesDigits(n) {
+  var digits = [];
+  var digitIndex = 1;
+  var i;
 
-  var index = 10;
-  var number = 1;
-  while 
+  for (i = 1; i < 10; i++)
+    digits[digitIndex++] = i;
+
+  for (i = 1; digitIndex < n; i++) {
+    var numberDigits = i.toString().split('').map(Number);
+
+    for (var j = 0; j < 10; j++) {
+      for (var k = 0; k < numberDigits.length; k++)
+        digits[digitIndex++] = numberDigits[k];
+
+      digits[digitIndex++] = j;
+    }
+  }
+
+  return digits;
 }
 
-function calculateDoubleBasePalindromeSum(max) {
-  return Array.range(0, max).filter(function(n) {
-    return n.toString().isPalindrome() && n.toString(2).isPalindrome();
-  }).sum();
+function computeChampernownesProduct(digits) {
+  var max = Math.max.apply(null, digits);
+  var champernownesDigits = computeChampernownesDigits(max);
+  return digits.reduce(function(p, n) { return p * champernownesDigits[n] }, 1);
 }
 
-var result = calculateDoubleBasePalindromeSum(1000000);
+var result = computeChampernownesProduct([1,10,100,1000,10000,100000,1000000]);
 
 console.log(result);
 
-//
+// 210
