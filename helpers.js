@@ -1,4 +1,17 @@
 /**
+* Wraps a function in a result remembering map.
+*/
+Function.memoize = function(func) {
+  var results = {};
+  return function() {
+    var parameters = JSON.stringify(arguments);
+    if (results.hasOwnProperty(parameters))
+      return results[parameters];
+    return results[parameters] = func.apply(null, arguments);
+  }
+}
+
+/**
 * Wraps a boolean returning function which negates its results.
 */
 Function.prototype.not = function() {
@@ -304,6 +317,20 @@ Array.prototype.matches = function(match) {
   return this.filter(function(item) {
     return item.isMatch(match);
   });
+};
+
+/**
+* Returns an object where the keys are the values returned when applying the
+* specified function to the items in the array and the values are arrays of the
+* items with that key.
+*/
+Array.prototype.group = function(func) {
+  return this.reduce(function(groups, item) {
+    var key = func(item);
+    counts[key] = counts[key] || [];
+    counts[key].push(item);
+    return counts;
+  }, {});
 };
 
 /**
