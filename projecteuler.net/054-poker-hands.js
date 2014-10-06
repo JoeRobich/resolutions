@@ -1,6 +1,6 @@
 #! node
 
-// http://jsfiddle.net/k8u4op00/1/
+// http://jsfiddle.net/k8u4op00/2/
 
 // PROBLEM //
 
@@ -38,8 +38,7 @@ How many hands does Player 1 win?
 
 // HELPERS //
 
-Object.prototype.keys=function(){return Object.keys(this);}
-Object.prototype.vals=function(){var t=this;return t.keys().map(function(k){return t[k]})}
+Object.prototype.vals=function(){var t=this;return Object.keys(t).map(function(k){return t[k]})}
 
 Array.prototype.chunk=function(n){var a=[],i=0;while(i<this.length){a.push(this.slice(i,i+n));i+=n}return a}
 Array.prototype.group=function(f){return this.reduce(function(g,i){var k=f(i);g[k]=g[k]||[];g[k].push(i);return g},{})}
@@ -47,7 +46,6 @@ Array.prototype.find=function(f){for(var i=0;i<this.length;i++)if(f(this[i]))ret
 Array.prototype.all=function(f){for(var i=0;i<this.length;)if(!f(this[i++]))return !1;return !0}
 
 // ANSWER //
-
 
 function determineCardValue(card) {
   switch (card) {
@@ -75,172 +73,82 @@ function determineHandType(cards) {
   var isStraight = hasStraight(cards);
 
   if (isFlush && isStraight) {
-    // Royal flush
     if (cards[0].value == 14)
       return { value: 9 };
 
-    // Straigh flush
-    return { value: 8, highCardValue: cards[0].value };
+    return { value: 8, breakerValue: cards[0].value };
   }
 
   var groups = cards.group(function(c){return c.value}).vals();
   if (groups.length == 2) {
-    // Four of a kind
     var fourOfAKind = groups.find(function(g){return g.length == 4});
     if (fourOfAKind)
-      return { value: 7, fourOfAKindValue: fourOfAKind[0].value };
+      return { value: 7, breakerValue: fourOfAKind[0].value };
 
-    // Full house
     var threeOfAKind = groups.find(function(g){return g.length == 3});
     var pair = groups.find(function(g){return g.length == 2});
-    return { value: 6, threeOfAKindValue: threeOfAKind[0].value, pairValue: pair[0].value };
+    return { value: 6, breakerValue: (threeOfAKind[0].value << 4) + pair[0].value };
   }
 
   if (isFlush)
     return { value: 5 };
 
   if (isStraight)
-    return { value: 4, highCardValue: cards[0].value };
+    return { value: 4, breakerValue: cards[0].value };
 
   if (groups.length == 3) {
-    // Three of a kind
     var threeOfAKind = groups.find(function(g){return g.length == 3});
     if (threeOfAKind)
-      return { value: 3, threeOfAKindValue: threeOfAKind[0].value };
+      return { value: 3, breakerValue: threeOfAKind[0].value };
 
-    // Two pairs
-    var pairs = groups.filter(function(g){return g.length == 2});
-      return { value: 2, pairValues: pairs.map(function(p){return p[0].value}).sort(function(a,b){return b-a;}) };
+    var pairValues = groups.filter(function(g){return g.length == 2}).map(function(p){return p[0].value}).sort(function(a,b){return b-a;});
+    return { value: 2, breakerValue: (pairValues[0] << 4) + pairValues[1] };
   }
 
   if (groups.length == 4) {
-    // One Pair
     var pair = groups.find(function(g){return g.length == 2});
-    return { value: 1, pairValue: pair[0].value };
+    return { value: 1, breakerValue: pair[0].value };
   }
 
-  // High card
   return { value: 0 };
 }
 
+function determineHandValue(cards) {
+  return cards.reduce(function(s,c,i){return s + (c.value << ((5 - i) * 4))},0);
+}
+
+function parseCard(cardString) {
+  var card = cardString.split('');
+  var value = determineCardValue(card[0]);
+  var suit = card[1];
+  return { value: value, suit: suit };
+}
+
 function parseHand(hand) {
-  var cards = [];
-  for (var cardIndex = 0; cardIndex < hand.length; cardIndex++) {
-    var card = hand[cardIndex].split('');
-    var value = determineCardValue(card[0]);
-    var suit = card[1];
-    cards.push({ value: value, suit: suit });
-  }
-  cards = cards.sort(function(a, b){return b.value - a.value;});
-  var handType = determineHandType(cards);
-  return { type: handType, cards: cards };
+  var cards = hand.map(parseCard).sort(function(a, b){return b.value - a.value;});
+  var type = determineHandType(cards);
+  var value = determineHandValue(cards);
+  return { type: type, value: value };
 }
 
 function countWinningHands(hands) {
   var winningHands = 0;
   for (var handIndex = 0; handIndex < hands.length; handIndex++) {
     var hand = hands[handIndex].chunk(5);
-
     var p1Hand = parseHand(hand[0]);
     var p2Hand = parseHand(hand[1]);
 
-    if (p1Hand.type.value > p2Hand.type.value) {
-      winningHands++;
-    }
-    else if (p1Hand.type.value == p2Hand.type.value) {
-      if (p1Hand.type.value == 8) {
-        if (p1Hand.type.highCardValue > p2Hand.type.highCardValue) {
-          winningHands++;
-          continue;
-        }
-        else if (p1Hand.type.highCardValue < p2Hand.type.highCardValue) {
-          continue;
-        }
-      }
-      else if (p1Hand.type.value == 7) {
-        if (p1Hand.type.fourOfAKindValue > p2Hand.type.fourOfAKindValue) {
-          winningHands++;
-          continue;
-        }
-        else if (p1Hand.type.fourOfAKindValue < p2Hand.type.foundOfAKindValue) {
-          continue;
-        }
-      }
-      else if (p1Hand.type.value == 6) {
-        if (p1Hand.type.threeOfAKindValue > p2Hand.type.threeOfAKindValue){
-          winningHands++;
-          continue
-        }
-        else if (p1Hand.type.threeOfAKindValue == p2Hand.type.threeOfAKindValue) {
-          if (p1Hand.type.pairValue > p2Hand.type.pairValue) {
-            winningHands++;
-            continue;
-          }
-          else if (p1Hand.type.pairValue < p2Hand.type.pairValue) {
-            continue;
-          }
-        }
-        else if (p1Hand.type.threeOfAKindValue < p2Hand.type.threeOfAKindValue) {
-          continue;
-        }
-      }
-      else if (p1Hand.type.value == 4) {
-        if (p1Hand.type.highCardValue > p2Hand.type.highCardValue) {
-          winningHands++;
-          continue;
-        }
-        else if (p1Hand.type.highCardValue < p2Hand.type.highCardValue) {
-          continue;
-        }
-      }
-      else if (p1Hand.type.value == 3) {
-        if (p1Hand.type.threeOfAKindValue > p2Hand.type.threeOfAKindValue) {
-          winningHands++;
-          continue;
-        }
-        else if (p1Hand.type.threeOfAKindValue < p2Hand.type.threeOfAKindValue) {
-          continue;
-        }
-      }
-      else if (p1Hand.type.value == 2) {
-        if (p1Hand.type.pairValues[0] > p2Hand.type.pairValues[0]){
-          winningHands++;
-          continue
-        }
-        else if (p1Hand.type.pairValues[0] == p2Hand.type.pairValues[0]) {
-          if (p1Hand.type.pairValues[1] > p2Hand.type.pairValues[1]) {
-            winningHands++;
-            continue;
-          }
-          else if (p1Hand.type.pairValues[1] < p2Hand.type.pairValues[1]) {
-            continue;
-          }
-        }
-        else if (p1Hand.type.pairValues[0] < p2Hand.type.pairValues[0]) {
-          continue;
-        }
-      }
-      else if (p1Hand.type.value == 1) {
-        if (p1Hand.type.pairValue > p2Hand.type.pairValue) {
-          winningHands++;
-          continue;
-        }
-        else if (p1Hand.type.pairValue < p2Hand.type.pairValue) {
-          continue;
-        }
-      }
+    if (p1Hand.type.value < p2Hand.type.value)
+      continue;
 
-      // compare high cards
-      for (var cardIndex = 0; cardIndex < 5; cardIndex++) {
-        if (p1Hand.cards[cardIndex].value > p2Hand.cards[cardIndex].value) {
-          winningHands++;
-          break;
-        }
-        else if (p1Hand.cards[cardIndex].value < p2Hand.cards[cardIndex].value) {
-          break;
-        }
-      }
-    }
+    if (p1Hand.type.value == p2Hand.type.value)
+      if (p1Hand.type.breakerValue < p2Hand.type.breakerValue)
+        continue;
+      else if (p1Hand.type.breakerValue == p2Hand.type.breakerValue
+            && p1Hand.value < p2Hand.value)
+        continue;
+
+    winningHands++;
   }
 
   return winningHands;
