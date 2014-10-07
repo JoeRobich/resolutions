@@ -484,6 +484,31 @@ Number.prototype.factorial = function() {
   return product;
 };
 
+/**
+* Requests an external library and returns a promise that resolve when it is
+* loaded.
+*/
+function request(url) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onload = function (e) {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var module = {};
+          eval.call(module, xhr.responseText);
+          resolve(module);
+        } else {
+          reject(xhr.statusText);
+        }
+      }
+    };
+    xhr.onerror = function (e) {
+      reject(xhr.statusText);
+    };
+    xhr.send(null);
+  });
+}
 
 /**
 * Returns a function equivalent of the specified lambda.
