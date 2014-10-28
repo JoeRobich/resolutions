@@ -38,15 +38,15 @@ Array.prototype.sum=function(f){f=f||function(i){return i};return this.reduce(fu
 
 // ANSWER //
 
-var letters = "abcdefghijklmnopqrstuvwxyz";
-
 function convert(cipher, password) {
   return cipher.map(function(c,i) {
-    return (c ^ password[i % password.length]) % 256;
+    return c ^ password[i % password.length];
   });
 }
 
 function findCipherSum(cipher) {
+  var letters = "abcdefghijklmnopqrstuvwxyz";
+
   for (var index1 = 0; index1 < letters.length; index1++)
   for (var index2 = 0; index2 < letters.length; index2++)
   for (var index3 = 0; index3 < letters.length; index3++) {
